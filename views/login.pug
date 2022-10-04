@@ -1,0 +1,13 @@
+extends ./layouts/login_layout.pug
+
+block content 
+    .loginContainer 
+        h1 Login 
+        
+        p.errorMessage #{errorMessage}
+
+        form(method="post")
+            input(type="text", name="logUsername", placeholder="Username or email", required="", value="taiheo")
+            input(type="password", name="logPassword", placeholder="Password", required="", value="123456")
+            input(type="submit", value="Login")
+        a(href="/register") Need an account? Register here.
