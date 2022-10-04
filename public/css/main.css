@@ -61,6 +61,12 @@ button {
     color: var(--greyButtonText);
 }
 
+button svg,
+button span {
+    pointer-events:none;
+}
+
+
 .mainSectionContainer {
     padding:  0;
     border-left: 1px solid var(--lightGrey);

@@ -35,7 +35,7 @@ $(document).on("click", ".likeButton", (e) => {
         url: `api/posts/${postId}/like`,
         type: "PUT",
         success: (post) => {
-            console.log(post.likes.length);
+            button.find("span").text(post.likes.length || "");
         }
     })
 })
@@ -80,6 +80,7 @@ function createPostHtml(postData) {
                             <div class='postButtonContainer'>
                                 <button class='likeButton'>
                                     <i class='far fa-heart'></i>
+                                    <span>${postData.likes.length || ""}</span>
                                 </button>
                             </div>
                             <div class='postButtonContainer'>
