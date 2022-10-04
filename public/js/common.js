@@ -36,6 +36,12 @@ $(document).on("click", ".likeButton", (e) => {
         type: "PUT",
         success: (post) => {
             button.find("span").text(post.likes.length || "");
+
+            if(post.likes.includes(userLoggedIn._id)){
+                button.addClass("active");
+            }else{
+                button.removeClass("active");
+            }
         }
     })
 })
@@ -61,6 +67,8 @@ function createPostHtml(postData) {
     var displayName = postedBy.firstName + " " + postedBy.lastName;
     var timestamp = timeDifference(Date.now(), new Date(postData.createdAt));
 
+    var likeButtonActiveClass = postData.likes.includes(userLoggedIn._id) ? "active" : "";
+
     return `<div class='post' data-id='${postData._id}'>
 
                 <div class='mainContentContainer'>
@@ -77,8 +85,8 @@ function createPostHtml(postData) {
                             <span>${postData.content}</span>
                         </div>
                         <div class='postFooter'>
-                            <div class='postButtonContainer'>
-                                <button class='likeButton'>
+                            <div class='postButtonContainer red'>
+                                <button class='likeButton ${likeButtonActiveClass}'>
                                     <i class='far fa-heart'></i>
                                     <span>${postData.likes.length || ""}</span>
                                 </button>
@@ -88,8 +96,8 @@ function createPostHtml(postData) {
                                     <i class='far fa-comment'></i>
                                 </button>
                             </div>
-                            <div class='postButtonContainer'>
-                                <button>
+                            <div class='postButtonContainer green'>
+                                <button class='retweetButton'>
                                     <i class='fas fa-retweet'></i>
                                 </button>
                             </div>
