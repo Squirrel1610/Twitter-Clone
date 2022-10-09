@@ -29,11 +29,12 @@ router.post("/", async (req, res, next) => {
 router.get("/", async (req, res, next) => {
     Post.find({})
     .populate("postedBy")
+    .populate("retweetData")
     .sort({
         createdAt: -1
     })
     .then(async (results) => {
-        // results = await User.populate(results, {path: "postedBy"});
+        results = await User.populate(results, {path: "retweetData.postedBy"});
         return res.status(200).send(results)
     })
     .catch((err) => {
@@ -71,6 +72,67 @@ router.put("/:postId/like", async (req, res, next) => {
     .catch(err => {
         console.log(err.message);
         return res.sendStatus(400);
+    })
+
+    return res.status(200).send(post);
+})
+
+//retweet post
+router.post("/:postId/retweet", async (req, res, next) => {
+    var postId = req.params.postId;
+    var user = req.session.user;
+    
+    var deletedPost = await Post.findOneAndDelete({
+        postedBy: user._id,
+        retweetData: postId
+    })
+
+    var option = deletedPost ? "$pull" : "$addToSet";
+
+    var repost = deletedPost;
+
+    //if it doesn't have retweet post => create a retweet
+    if(!repost){
+        repost = await Post.create({
+            postedBy: user._id,
+            retweetData: postId
+        }).catch(err => {
+            console.log(err.message);
+            res.sendStatus(400);
+        })
+    }
+
+    //if deletedPost is null, it will add. Otherwise it will pull
+    //insert user retweets 
+    req.session.user = await User.findByIdAndUpdate(
+        user._id,
+        {
+            [option] : {
+                retweets: repost._id 
+            }
+        },
+        {
+            new: true
+        }
+    ).catch(err => {
+        console.log(err.message);
+        res.sendStatus(400);
+    });
+
+    //insert post retweet users
+    var post = await Post.findByIdAndUpdate(
+        postId,
+        {
+            [option]: {
+                retweetUsers: user._id
+            }
+        },
+        {
+            new: true
+        }
+    ).catch(err => {
+        console.log(err.message);
+        res.sendStatus(400);
     })
 
     return res.status(200).send(post);

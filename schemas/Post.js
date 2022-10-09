@@ -4,24 +4,31 @@ const PostSchema = new mongoose.Schema(
     {
         content: {
             type: String,
-            trim: true,
-            required: true
+            trim: true
         },
         postedBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true
         },
         pinned: {
             type: Boolean,
-            default: false
         },
         likes: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "User"
             }
-        ]
+        ],
+        retweetUsers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            }
+        ],
+        retweetData: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Post"
+        },
     },
     {
         timestamps: true
