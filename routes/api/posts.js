@@ -14,6 +14,11 @@ router.post("/", async (req, res, next) => {
         postedBy: req.session.user._id
     }
 
+    if(req.body.replyTo){
+        postData.replyTo = req.body.replyTo;
+    }
+
+
     Post.create(postData)
     .then(async (newPost) => {
         newPost = await User.populate(newPost, {path: "postedBy"});
@@ -27,20 +32,20 @@ router.post("/", async (req, res, next) => {
 
 //get timeline
 router.get("/", async (req, res, next) => {
-    Post.find({})
-    .populate("postedBy")
-    .populate("retweetData")
-    .sort({
-        createdAt: -1
-    })
-    .then(async (results) => {
-        results = await User.populate(results, {path: "retweetData.postedBy"});
-        return res.status(200).send(results)
-    })
-    .catch((err) => {
-        console.log(err.message);
-        return res.sendStatus(400);
-    })
+    var results = await getPosts();
+    return res.status(200).send(results);
+})
+
+//get post by id
+router.get("/:postId", async (req, res, next) => {
+    var postId = req.params.postId;
+    var filter = {
+        _id: postId
+    }
+    var results = await getPosts(filter);
+    var result = results[0];
+    
+    return res.status(200).send(result);
 })
 
 //like and unlike post
@@ -137,5 +142,19 @@ router.post("/:postId/retweet", async (req, res, next) => {
 
     return res.status(200).send(post);
 })
+
+async function getPosts(filter = {}) {
+    var results = await Post.find(filter)
+    .populate("postedBy")
+    .populate("retweetData")
+    .populate("replyTo")
+    .sort({
+        createdAt: -1
+    })
+    .catch((err) => console.log(err.message))
+
+    results = await User.populate(results, {path: "replyTo.postedBy"});
+    return await User.populate(results, {path: "retweetData.postedBy"});
+}
 
 module.exports = router;
