@@ -108,6 +108,32 @@ $(document).on("click", ".post", (e) => {
     }
 })
 
+//open delete post modal
+$("#deletePostModal").on("show.bs.modal", (event) => {
+    var button = $(event.relatedTarget);
+    var postId = getPostIdFromElement(button);
+    $("#deletePostButton").data("id", postId);
+})
+
+//click delete post button
+$("#deletePostButton").click((event) => {
+    var postId = $(event.target).data("id");
+
+    $.ajax({
+        url: `/api/posts/${postId}`,
+        type: "DELETE",
+        success: (data, status, xhr) => {
+
+            if(xhr.status != 202) {
+                alert("could not delete post");
+                return;
+            }
+            
+            location.reload();
+        }
+    })
+})
+
 //get postId from button such as like, reply, retweet
 function getPostIdFromElement(element){
     var isRoot = element.hasClass("post");
@@ -162,6 +188,11 @@ function createPostHtml(postData, largeFont = false) {
 
     var largeFontClass = largeFont ? "largeFont" : "";
 
+    var buttons = "";
+    if (postData.postedBy._id == userLoggedIn._id) {
+        buttons = `<button data-id="${postData._id}" data-toggle="modal" data-target="#deletePostModal"><i class='fas fa-times'></i></button>`;
+    }
+
     return `<div class='post ${largeFontClass}' data-id='${postData._id}'>    
                 <div class='postActionContainer'>
                     ${retweetText}
@@ -175,6 +206,7 @@ function createPostHtml(postData, largeFont = false) {
                             <a href='/profile/${postedBy.username}' class='displayName'>${displayName}</a>
                             <span class='username'>@${postedBy.username}</span>
                             <span class='date'>${timestamp}</span>
+                            ${buttons}
                         </div>
                         ${replyFlag}
                         <div class='postBody'>
