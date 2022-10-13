@@ -90,12 +90,22 @@ $("#replyModal").on("show.bs.modal", (e) => {
     $("#submitReplyButton").data("id", postId);
     
     $.get(`/api/posts/${postId}`, (result) => {
-        outputPosts(result, $("#originalPostContainer"));
+        outputPosts(result.postData, $("#originalPostContainer"));
     })
 })
 
 $("#replyModal").on("hidden.bs.modal", (e) => {
     $("#originalPostContainer").html("");
+})
+
+//click to view post
+$(document).on("click", ".post", (e) => {
+    var element = $(e.target);
+    var postId = getPostIdFromElement(element);
+
+    if(postId && !element.is("button")){
+        window.location.href = `/posts/${postId}`;
+    }
 })
 
 //get postId from button such as like, reply, retweet
@@ -111,7 +121,7 @@ function getPostIdFromElement(element){
 }
 
 //HTML of the post
-function createPostHtml(postData) {
+function createPostHtml(postData, largeFont = false) {
     var isRetweet = postData.retweetData !== undefined;
     var retweetedBy = isRetweet ? postData.postedBy.username : null; 
     postData = isRetweet ? postData.retweetData : postData;
@@ -137,7 +147,7 @@ function createPostHtml(postData) {
     }
 
     var replyFlag = "";
-    if(postData.replyTo){
+    if(postData.replyTo && postData.replyTo._id){
         if(!postData.replyTo._id){
             return alert("replyTo is not populated");
         }else if(!postData.replyTo.postedBy._id){
@@ -150,7 +160,9 @@ function createPostHtml(postData) {
                     </div>`
     }
 
-    return `<div class='post' data-id='${postData._id}'>    
+    var largeFontClass = largeFont ? "largeFont" : "";
+
+    return `<div class='post ${largeFontClass}' data-id='${postData._id}'>    
                 <div class='postActionContainer'>
                     ${retweetText}
                 </div>
@@ -244,6 +256,29 @@ function outputPosts(results, container){
             container.append(html);
         });
     }  
+}
+
+//show posts in the view post page
+function outputPostsWithReplies(results, container){
+    container.html("");
+
+    // the post which this post reply to
+    if(results.replyTo && results.replyTo._id){
+        var html = createPostHtml(results.replyTo);
+        container.append(html);
+    }
+
+    //main post
+    var mainPostHtml = createPostHtml(results.postData, true);
+    container.append(mainPostHtml);
+
+    if(results.replies.length > 0){
+        results.replies.forEach(reply => {
+            var html = createPostHtml(reply);
+            container.append(html);
+        });
+    }
+    
 }
 
 

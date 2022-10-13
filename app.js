@@ -12,7 +12,7 @@ const connectDatabase = require("./database");
 
 
 //middleware
-const middleware = require("./middleware");
+const { requireLogin } = require("./middleware");
 
 app.set("view engine", "pug");
 app.set("views", "views");
@@ -39,25 +39,27 @@ const server = app.listen(port, ()=>{
 //routes 
 const loginRoute = require("./routes/loginRoutes");
 const registerRoute = require("./routes/registerRoutes");
-const logoutRoute = require("./routes/logout");
+const logoutRoute = require("./routes/logoutRoutes");
+const postRoute = require("./routes/postRoutes");
 
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
 app.use("/logout", logoutRoute);
+app.use("/posts", requireLogin, postRoute);
 
 //API routes
 const postsApiRoute = require("./routes/api/posts");
-const { requireLogin } = require("./middleware");
+
 
 app.use("/api/posts", requireLogin, postsApiRoute);
 
-app.get("/", middleware.requireLogin, (req, res, next) => {
+app.get("/", requireLogin, (req, res, next) => {
     const payload = {
         pageTitle: "Home",
         userLoggedIn: req.session.user,
         userLoggedInJs: JSON.stringify(req.session.user)
     }
 
-    res.render("home", payload);
+    return res.render("home", payload);
 })
 

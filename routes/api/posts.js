@@ -36,16 +36,30 @@ router.get("/", async (req, res, next) => {
     return res.status(200).send(results);
 })
 
-//get post by id
+//get post by id and get replies to that post
 router.get("/:postId", async (req, res, next) => {
     var postId = req.params.postId;
     var filter = {
         _id: postId
     }
-    var results = await getPosts(filter);
-    var result = results[0];
+    var postData = await getPosts(filter);
+    postData = postData[0];
+
+    var results = {
+        postData
+    }
+
+    //take the post which this post reply to
+    if(postData.replyTo){
+        results.replyTo = postData.replyTo
+    }
+
+    //take replies to this post
+    results.replies = await getPosts({
+        replyTo: postId
+    })
     
-    return res.status(200).send(result);
+    return res.status(200).send(results);
 })
 
 //like and unlike post
