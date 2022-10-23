@@ -32,7 +32,14 @@ router.post("/", async (req, res, next) => {
 
 //get timeline
 router.get("/", async (req, res, next) => {
-    var results = await getPosts();
+    var searchObj = req.query;
+    if(searchObj.isReply){
+        var isReply = searchObj.isReply == "true";
+        searchObj.replyTo = { $exists: isReply};
+        delete searchObj.isReply;
+    }
+
+    var results = await getPosts(searchObj);
     return res.status(200).send(results);
 })
 
