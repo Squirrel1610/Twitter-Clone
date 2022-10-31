@@ -51,8 +51,9 @@ app.use("/profile", requireLogin, profileRoute);
 
 //API routes
 const postsApiRoute = require("./routes/api/posts");
+const usersApiRoute = require("./routes/api/users");
 
-
+app.use("/api/users", requireLogin, usersApiRoute);
 app.use("/api/posts", requireLogin, postsApiRoute);
 
 app.get("/", requireLogin, (req, res, next) => {

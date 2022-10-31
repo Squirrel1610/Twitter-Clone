@@ -134,6 +134,40 @@ $("#deletePostButton").click((event) => {
     })
 })
 
+//click follow button
+$(document).on("click", ".followButton", (e) =>{
+    var button = $(e.target);
+    var userId = button.data().user;
+    
+    $.ajax({
+        url: `/api/users/${userId}/follow`,
+        type: "PUT",
+        success: (data, status, xhr) => {
+            if(xhr.status == 404){
+                alert("User not found");
+                return;
+            }
+            
+            var difference = 1;
+
+            if(data.following && data.following.includes(userId)){
+                button.addClass("following");
+                button.text("Following");
+            }else{
+                button.removeClass("following");
+                button.text("Follow");
+                difference = -1;
+            }
+            
+            var followersLabel = $("#followersValue");
+            var followersText = followersLabel.text();
+            followersText = parseInt(followersText);
+            followersLabel.text(followersText + difference);
+        }
+    })
+
+})
+
 //get postId from button such as like, reply, retweet
 function getPostIdFromElement(element){
     var isRoot = element.hasClass("post");
