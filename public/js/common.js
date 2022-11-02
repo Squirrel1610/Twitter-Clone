@@ -1,3 +1,7 @@
+//Global variables
+var cropper;
+
+
 $("#postTextarea, #replyTextarea").keyup(e => {
     var textbox = $(e.target);
     var value = textbox.val().trim();
@@ -167,6 +171,52 @@ $(document).on("click", ".followButton", (e) =>{
     })
 
 })
+
+//input file change
+$("#filePhoto").change( function () {
+    if(this.files && this.files[0]){
+        var reader = new FileReader();
+        reader.onload = (e) => {
+            var imagePreview = document.getElementById("imagePreview");
+            imagePreview.src = e.target.result;
+
+            if(cropper){
+                cropper.destroy();
+            }
+
+            cropper = new Cropper(imagePreview, {
+                aspectRatio: 1 / 1,
+                background: false
+            })
+        }
+        reader.readAsDataURL(this.files[0]);
+    }
+})
+
+//click upload profilePicture button
+$("#imageUploadButton").click(() => {
+    var canvas = cropper.getCroppedCanvas();
+
+    if(!canvas){
+        alert("Can't get cropped image");
+        return;
+    }
+
+    canvas.toBlob((blob) => {
+        var formData = new FormData();
+        formData.append("croppedImage", blob);
+
+        $.ajax({
+            url: "/api/users/profilePicture",
+            type: "POST",
+            data: formData,
+            processData: false, //J query not to convert form data to string
+            contentType: false, //J query not to add contentType to header of request 
+            success: () => location.reload()
+        })
+    })
+})
+
 
 //get postId from button such as like, reply, retweet
 function getPostIdFromElement(element){

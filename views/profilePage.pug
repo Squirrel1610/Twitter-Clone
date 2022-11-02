@@ -16,6 +16,9 @@ block content
 
                 .userImageContainer 
                     img(src=profileUser.profilePic, alt="User's profile image")
+                    if userLoggedIn._id == profileUser._id
+                        button.profilePictureButton(data-toggle="modal", data-target="#imageUploadModal")
+                            i.fas.fa-camera
             .profileButtonsContainer
                 if profileUser._id != userLoggedIn._id
                     a.profileButton(href=`/messages/${profileUser._id}`) 
@@ -44,6 +47,7 @@ block content
         .postsContainer
 
         +createPostModals(userLoggedIn)
+        +createImageUploadModal()
 
 block scripts 
     script(src="/js/profile.js") 
