@@ -10,6 +10,14 @@ function loadPosts(){
     $.get("/api/posts", 
     {
         postedBy: profileUserId,
+        pinned: true
+    }, results => {
+        outputPinnedPost(results, $(".pinnedPostContainer"));
+    })
+
+    $.get("/api/posts", 
+    {
+        postedBy: profileUserId,
         isReply: false
     }, results => {
         outputPosts(results, $(".postsContainer"));

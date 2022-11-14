@@ -261,6 +261,60 @@ $("#coverPhotoButton").click(() => {
     })
 })
 
+//open pin post modal
+$("#confirmPinModal").on("show.bs.modal", (event) => {
+    var button = $(event.relatedTarget);
+    var postId = getPostIdFromElement(button);
+    $("#pinPostButton").data("id", postId);
+})
+
+//click pin post button
+$("#pinPostButton").click((event) => {
+    var postId = $(event.target).data("id");
+
+    $.ajax({
+        url: `/api/posts/${postId}`,
+        type: "PUT",
+        data: {pinned: true},
+        success: (data, status, xhr) => {
+
+            if(xhr.status != 204) {
+                alert("could not pin the post");
+                return;
+            }
+            
+            location.reload();
+        }
+    })
+})
+
+//open unpin post modal
+$("#unpinModal").on("show.bs.modal", (event) => {
+    var button = $(event.relatedTarget);
+    var postId = getPostIdFromElement(button);
+    $("#unpinPostButton").data("id", postId);
+})
+
+//click unpin post button
+$("#unpinPostButton").click((event) => {
+    var postId = $(event.target).data("id");
+
+    $.ajax({
+        url: `/api/posts/${postId}`,
+        type: "PUT",
+        data: {pinned: false},
+        success: (data, status, xhr) => {
+
+            if(xhr.status != 204) {
+                alert("could not unpin the post");
+                return;
+            }
+            
+            location.reload();
+        }
+    })
+})
+
 
 //get postId from button such as like, reply, retweet
 function getPostIdFromElement(element){
@@ -317,8 +371,19 @@ function createPostHtml(postData, largeFont = false) {
     var largeFontClass = largeFont ? "largeFont" : "";
 
     var buttons = "";
+    var pinnedPostText = "";
     if (postData.postedBy._id == userLoggedIn._id) {
-        buttons = `<button data-id="${postData._id}" data-toggle="modal" data-target="#deletePostModal"><i class='fas fa-times'></i></button>`;
+        
+        var pinnedClass = "";
+        var dataTarget = "#confirmPinModal";
+        if(postData.pinned === true){
+            pinnedClass = "active";
+            dataTarget = "#unpinModal"
+            pinnedPostText = "<i class='fas fa-thumbtack'></i> <span>Pinned post<span/>"
+        }
+
+        buttons = ` <button class='pinButton ${pinnedClass}' data-id="${postData._id}" data-toggle="modal" data-target="${dataTarget}"><i class='fas fa-thumbtack'></i></button>
+                    <button data-id="${postData._id}" data-toggle="modal" data-target="#deletePostModal"><i class='fas fa-times'></i></button>`;
     }
 
     return `<div class='post ${largeFontClass}' data-id='${postData._id}'>    
@@ -330,6 +395,7 @@ function createPostHtml(postData, largeFont = false) {
                         <img src='${postedBy.profilePic}'>
                     </div>
                     <div class='postContentContainer'>
+                        <div class='pinnedPostText'>${pinnedPostText}</div>
                         <div class='header'>
                             <a href='/profile/${postedBy.username}' class='displayName'>${displayName}</a>
                             <span class='username'>@${postedBy.username}</span>
@@ -439,6 +505,21 @@ function outputPostsWithReplies(results, container){
         });
     }
     
+}
+
+//show the pinned post 
+function outputPinnedPost(results, container){
+    if(results.length === 0 ){
+        container.hide();
+        return;
+    }
+
+    container.html("");
+
+    results.forEach(result => {
+        var html = createPostHtml(result);
+        container.append(html);
+    })
 }
 
 

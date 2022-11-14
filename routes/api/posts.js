@@ -200,6 +200,25 @@ router.delete("/:postId", async (req, res, next) => {
     })
 })
 
+//pin post
+router.put("/:postId", async (req, res, next) => {
+    if(req.body.pinned){
+        await Post.updateMany({postedBy: req.session.user}, {pinned: false})
+        .catch(err => {
+            console.log(err.message);
+            return res.sendStatus(400);
+        })
+    }
+
+    await Post.findByIdAndUpdate(req.params.postId, req.body)
+    .catch(error => {
+        console.log(error);
+        return res.sendStatus(400);
+    })
+
+    return res.sendStatus(204);
+})
+
 async function getPosts(filter = {}) {
     var results = await Post.find(filter)
     .populate("postedBy")
