@@ -1,5 +1,7 @@
 //Global variables
 var cropper;
+var timer;
+var selectedUsers = [];
 
 
 $("#postTextarea, #replyTextarea").keyup(e => {
@@ -315,6 +317,103 @@ $("#unpinPostButton").click((event) => {
     })
 })
 
+//invite to the chat input key down
+$("#userSearchTextbox").keydown((event) => {
+    clearTimeout(timer);
+
+    var textbox = $(event.target);
+    var value = textbox.val();
+
+    if(value == "" && event.keyCode == 8){
+        //reomve user from selection
+        selectedUsers.pop();
+        updateSelectedUserHtml();
+        $(".resultsContainer").html("");
+        
+        if(selectedUsers.length == 0){
+            $("#createChatButton").prop("disabled", true);
+        }
+
+        return;
+    }
+
+    timer = setTimeout(() => {
+        value = textbox.val().trim();
+
+        if(value == ""){
+            $(".resultsContainer").html();
+        }else{
+            searchUser(value);
+        }
+    }, 1000)
+})
+
+//click create group chat
+$("#createChatButton").click(() => {
+    var data = JSON.stringify(selectedUsers);
+
+    $.post("/api/chats", {users: data}, chat => {
+        if(!chat || !chat._id){
+            return alert("Invalid respond from server");
+        }
+
+        window.location.href = `/messages/${chat._id}`;
+    })
+})
+
+//search user when create new message
+function searchUser(searchTerm){
+    $.get("/api/users", {search: searchTerm}, results => {
+        outputSelectableUsers(results, $(".resultsContainer"));
+    })
+}
+
+//select user for create new message
+function outputSelectableUsers(results, container){
+    container.html("");
+
+    results.forEach(result => {
+        //remove current user
+        if(result._id == userLoggedIn._id 
+            || selectedUsers.some((u) => u._id == result._id)){
+            return;
+        }
+
+        var html = createUserHtml(result, false);
+        
+        var element = $(html);
+        element.click(() => userSelected(result));
+
+        container.append(element);
+    }) 
+
+    if(results.length == 0){
+        container.append("<span class='noResults'>No results found</span>")
+    }
+}
+
+//when user is selected
+function userSelected(user) {
+    selectedUsers.push(user);
+    updateSelectedUserHtml();
+    $("#userSearchTextbox").val("").focus();
+    $(".resultsContainer").html("");
+    $("#createChatButton").prop("disabled", false);
+}
+
+function updateSelectedUserHtml() {
+    var elements = [];
+    
+    selectedUsers.forEach(user => {
+        var name = user.firstName + " " + user.lastName;
+        var userElement = $(`<span class="selectedUser">${name}</span>`);
+        elements.push(userElement);
+    })
+
+    $(".selectedUser").remove();
+    $("#selectedUsers").prepend(elements);
+
+}
 
 //get postId from button such as like, reply, retweet
 function getPostIdFromElement(element){
