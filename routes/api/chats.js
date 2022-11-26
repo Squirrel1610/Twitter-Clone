@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Chat = require("../../schemas/Chat");
 
+//create group chat
 router.post("/", async (req, res, next) => {
     if(!req.body.users){
         console.log("Users param not sent with request");
@@ -27,6 +28,25 @@ router.post("/", async (req, res, next) => {
     })
     .catch((err) => {
         console.log(err.message);
+        return res.sendStatus(400);
+    })
+})
+
+//get list chat
+router.get("/", async (req, res, next) => {
+    Chat.find(
+        {
+            users: {
+                $elemMatch: {
+                    $eq: req.session.user._id
+                }
+            }
+        }
+    )
+    .populate("users")
+    .then((chatList) => res.status(200).send(chatList))
+    .catch((error) => {
+        console.log(error.message);
         return res.sendStatus(400);
     })
 })
