@@ -44,6 +44,7 @@ router.get("/", async (req, res, next) => {
         }
     )
     .populate("users")
+    .sort({updatedAt: -1}) //sort updatedAt descending
     .then((chatList) => res.status(200).send(chatList))
     .catch((error) => {
         console.log(error.message);
