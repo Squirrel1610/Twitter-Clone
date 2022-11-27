@@ -10,14 +10,16 @@ block content
         .chatPageContainer  
             .chatTitleBarContainer
                 +createChatImage(chat, userLoggedIn)
-                span#chatName This is the chat
+                span#chatName(data-toggle="modal", data-target="#chatNameModal") This is the chat
             .mainContentContainer 
                 .chatContainer 
                     .chatMessages
                     .footer 
                         textarea(name="messageInput", placeholder="Type a message...")
                         button.sendMessageButton
-                            i.fas.fa-paper-plane 
+                            i.fas.fa-paper-plane
+
+        +createChatNameModal(chat) 
 
 
 block scripts 

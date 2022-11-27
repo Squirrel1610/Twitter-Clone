@@ -664,3 +664,7 @@ button span {
 { 
     margin-left: -10px;
 }
+
+#chatNameTextbox {
+    width: 100%;
+}

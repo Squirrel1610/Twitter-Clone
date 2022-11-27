@@ -52,4 +52,25 @@ router.get("/", async (req, res, next) => {
     })
 })
 
+//change the chat name
+router.put("/:chatId", async (req, res, next) => {
+    Chat.findByIdAndUpdate(req.params.chatId, req.body)
+    .then((chatData) => res.status(204).send(chatData))
+    .catch((error) => {
+        console.log(error.message);
+        return res.sendStatus(204);
+    })
+})
+
+//get chat by id
+router.get("/:chatId", (req, res, next) => {
+    Chat.findById(req.params.chatId)
+    .populate("users")
+    .then((chatData) => res.status(200).send(chatData))
+    .catch((error) => {
+        console.log(error.message);
+        return res.sendStatus(204);
+    })
+})
+
 module.exports = router;
