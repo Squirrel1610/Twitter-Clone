@@ -13,6 +13,13 @@
     --greenBackground: rgba(23,191,99,0.1);
 }
 
+html, body {
+    height: 100%;
+    min-height: 100%;
+    background-color: #fff;
+    font-weight: 300;
+}
+
 * {
     outline: none !important;
 }
@@ -60,8 +67,15 @@ nav a:hover {
     border-radius: 50%;
 }
 
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .wrapper > .row{
     margin: 0;
+    height: 100%;
 }
 
 button {
@@ -453,6 +467,7 @@ button span {
     display: flex;
     flex-direction: column;
     min-height: 0;
+    flex: 1;
 }
 
 .chatTitleBar {
@@ -563,4 +578,89 @@ button span {
     text-overflow: ellipsis;
 }
 
+.chatTitleBarContainer {
+    border-bottom: 1px solid var(--lightGrey);
+    display: flex;
+    align-items: center;
+    padding: var(--spacing);
+}
 
+#chatName {
+    width: 100%;
+    border: 1px solid transparent;
+    padding: 0 5px;
+}
+
+#chatName:hover {
+    border: 1px solid var(--lightGrey);
+    cursor: text;
+}
+
+.chatContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+}
+
+.chatContainer .footer {
+    display: flex;
+    padding: var(--spacing);
+    flex-shrink: 0px;
+}
+
+.chatContainer .footer textarea {
+    flex: 1;
+    resize: none;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 18px;
+    border: none;
+    padding: 8px 12px;
+    height: 48px;
+}
+
+.chatContainer .footer button {
+    background-color: transparent;
+    color: var(--blue);
+    font-size: 24px;
+}
+
+.chatMessages { 
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: var(--spacing);
+}
+
+.chatImagesContainer {
+    display: flex;
+    flex-direction: row-reverse;
+    height: 100%;
+    margin-right: 10px;
+}
+
+.chatImagesContainer img {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+}
+
+.chatImagesContainer .userCount {
+    height: 40px;
+    width: 40px;
+    background-color: #f1f1f1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border: 2px solid #fff;
+}
+
+.chatImagesContainer img:not(:last-child),
+.chatImagesContainer .userCount
+{ 
+    margin-left: -10px;
+}
