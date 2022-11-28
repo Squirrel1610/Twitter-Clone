@@ -59,10 +59,12 @@ app.use("/messages", requireLogin, messagesRoute);
 const postsApiRoute = require("./routes/api/posts");
 const usersApiRoute = require("./routes/api/users");
 const chatsApiRoute = require("./routes/api/chats");
+const messagesApiRoute = require("./routes/api/messages");
 
 app.use("/api/users", requireLogin, usersApiRoute);
 app.use("/api/posts", requireLogin, postsApiRoute);
 app.use("/api/chats", requireLogin, chatsApiRoute);
+app.use("/api/messages", requireLogin, messagesApiRoute);
 
 app.get("/", requireLogin, (req, res, next) => {
     const payload = {
