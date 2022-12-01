@@ -1,7 +1,7 @@
 :root {
     --blue: #1FA2F1;
     --blueLight: #9BD1F9;
-    --blueBackground: rgba(212,237,255,0.6);
+    --blueBackground: rgba(212, 237, 255, 0.6);
     --buttonHoverBg: #d4edff;
     --lightGrey: rgb(230, 236, 240);
     --spacing: 15px;
@@ -73,7 +73,7 @@ nav a:hover {
     height: 100%;
 }
 
-.wrapper > .row{
+.wrapper > .row {
     margin: 0;
     height: 100%;
 }
@@ -86,9 +86,8 @@ button {
 
 button svg,
 button span {
-    pointer-events:none;
+    pointer-events: none;
 }
-
 
 .mainSectionContainer {
     padding:  0;
@@ -118,13 +117,13 @@ button span {
     flex-shrink: 0;
 }
 
-.modal .postFormContainer{
+.modal .postFormContainer {
     border: none;
     padding: 0;
-    padding-top: var(--spacing);   
+    padding-top: var(--spacing);
 }
 
-.modal .post{
+.modal .post {
     padding: 0 0 var(--spacing) 0;
 }
 
@@ -175,6 +174,7 @@ button span {
 .mainContentContainer {
     flex: 1;
     display: flex;
+    overflow-y: hidden;
 }
 
 .postContentContainer {
@@ -222,42 +222,41 @@ button span {
     border-radius: 50%;
 }
 
-.postButtonContainer.red button.active{
+.postButtonContainer.red button.active {
     color: var(--red);
 }
 
-.postButtonContainer.red button:hover{
+.postButtonContainer.red button:hover {
     color: var(--red);
-    background-color: var(--redBackground);
+    background-color: var(--redBackground)
 }
 
-.postButtonContainer.green button.active{
+.postButtonContainer.green button.active {
     color: var(--green);
-    background-color: var(--greenBackground);
 }
 
 .postButtonContainer.green button:hover {
     color: var(--green);
-    background-color: var(--greenBackground);
+    background-color: var(--greenBackground)
 }
 
-.postActionContainer{
+.postActionContainer {
     padding-left: 35px;
     font-size: 13px;
     color: var(--greyText);
     margin-bottom: 5px;
 }
 
-.replyFlag{
+.replyFlag {
     margin-bottom: 5px;
 }
 
-.replyFlag a{
+.replyFlag a {
     color: var(--blue);
 }
 
 .post.largeFont .postBody,
-.post.largeFont .postFooter{
+.post.largeFont .postFooter {
     font-size: 23px;
 }
 
@@ -273,37 +272,36 @@ button span {
     padding: var(--spacing);
 }
 
-.coverPhotoSection{
+.coverPhotoSection {
     height: 180px;
-    background-color: var(--blue);   
+    background-color: var(--blue);
     position: relative;
 }
 
-.profileHeaderContainer .userImageContainer{
+.profileHeaderContainer .userImageContainer {
     width: 132px;
     height: 132px;
     margin-left: var(--spacing);
     position: absolute;
     bottom: -66px;
-    
+
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.profileHeaderContainer .userImageContainer img{
+.profileHeaderContainer .userImageContainer img {
     border: 4px solid #fff;
 }
 
-.profileHeaderContainer .profileButtonsContainer{
+.profileHeaderContainer .profileButtonsContainer {
     text-align: right;
     padding: var(--spacing);
     min-height: 66px;
 }
 
 .profileButton,
-.followButton
-{
+.followButton {
     border: 1px solid var(--blue);
     color: var(--blue);
     font-weight: bold;
@@ -314,46 +312,45 @@ button span {
 }
 
 .profileButton:hover,
-.followButton:hover
-{
+.followButton:hover {
     background-color: var(--blueBackground);
 }
 
-.followButton.following{
+.followButton.following {
     background-color: var(--blue);
     color: #fff;
 }
 
-.profileHeaderContainer .userDetailsContainer{
+.profileHeaderContainer .userDetailsContainer {
     display: flex;
     flex-direction: column;
     padding: 0 var(--spacing);
 }
 
-.followersContainer .value{
+.followersContainer .value {
     font-weight: bold;
     margin-right: 5px;
 }
 
-.followersContainer span:not(.value){
+.followersContainer span:not(.value) {
     color: var(--greyText);
 }
 
-.followersContainer a{
+.followersContainer a {
     margin-right: 15px;
 }
 
-.followersContainer a:hover{
+.followersContainer a:hover {
     border-bottom: 1px solid #000;
 }
 
-.tabsContainer{
+.tabsContainer {
     display: flex;
     border-bottom: 1px solid var(--lightGrey);
     flex-shrink: 0;
 }
 
-.tab{
+.tab {
     flex: 1;
     height: 52px;
     display: flex;
@@ -363,12 +360,12 @@ button span {
     font-weight: bold;
 }
 
-.tab.active{
+.tab.active {
     color: var(--blue);
     border-bottom: 2px solid var(--blue);
 }
 
-.tab:hover{
+.tab:hover {
     color: var(--blue);
     background-color: var(--blueBackground);
 }
@@ -390,22 +387,23 @@ button span {
 
 .user .userDetailsContainer {
     flex: 1;
-    padding: var(--spacing);
+    padding: 0 var(--spacing)
 }
 
-.profilePictureButton, .coverPhotoButton {
+.profilePictureButton,
+.coverPhotoButton {
     position: absolute;
     font-size: 50px;
-    color: rgba(0, 0, 0, 0.6);
+    color: rgba(0,0,0,0.6);
     display: none;
 }
 
-.userImageContainer:hover .profilePictureButton, 
+.userImageContainer:hover .profilePictureButton,
 .coverPhotoSection:hover .coverPhotoButton {
     display: block;
 }
 
-.coverPhotoContainer{
+.coverPhotoContainer {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -418,13 +416,12 @@ button span {
     object-fit: cover;
 }
 
-.imagePreviewContainer{
-    margin-top: var(--spacing);
-}
-
-#imagePreview, #coverPreview {
+#imagePreview,
+#coverPreview {
     width: 100%;
     display: block;
+ 
+    /* This rule is very important, please don't ignore this */
     max-width: 100%;
 }
 
@@ -438,7 +435,7 @@ button span {
 }
 
 .pinnedPostContainer {
-    border-bottom: 10px solid rgb(230, 236, 240);
+    border-bottom: 10px solid rgb(230,236,240);
 }
 
 .searchBarContainer {
@@ -468,6 +465,7 @@ button span {
     flex-direction: column;
     min-height: 0;
     flex: 1;
+    flex-basis: 0;
 }
 
 .chatTitleBar {
@@ -495,7 +493,7 @@ button span {
     color: #fff;
     padding: 7px 20px;
     margin: 10px auto;
-    border-radius: 40px; 
+    border-radius: 40px;
 }
 
 #createChatButton:disabled {
@@ -540,10 +538,9 @@ button span {
     font-size: 14px;
 }
 
-
 .resultListItem img {
     height: 100%;
-    width: 1005;
+    width: 100%;
     border-radius: 50%;
 }
 
@@ -557,7 +554,6 @@ button span {
     padding: 5px;
 }
 
-
 .groupChatImage img {
     height: 65%;
     width: 65%;
@@ -568,7 +564,7 @@ button span {
 }
 
 .groupChatImage img:first-of-type {
-    top: 0;    
+    top: 0;
     right: 0;
 }
 
@@ -612,11 +608,11 @@ button span {
 .chatContainer .footer textarea {
     flex: 1;
     resize: none;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0,0,0,0.05);
     border-radius: 18px;
     border: none;
     padding: 8px 12px;
-    height: 48px;
+    height: 38px;
 }
 
 .chatContainer .footer button {
@@ -625,7 +621,7 @@ button span {
     font-size: 24px;
 }
 
-.chatMessages { 
+.chatMessages {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -660,11 +656,113 @@ button span {
 }
 
 .chatImagesContainer img:not(:last-child),
-.chatImagesContainer .userCount
-{ 
+.chatImagesContainer .userCount {
     margin-left: -10px;
 }
 
 #chatNameTextbox {
     width: 100%;
+}
+
+.chatMessages .message {
+    padding-bottom: 2px;
+    list-style: none;
+    display: flex;
+    align-items: flex-end;
+    flex-shrink: 0;
+    -webkit-flex: 0;
+}
+
+.chatMessages .message .messageBody {
+    background-color: #f1f0f0;
+    padding: 6px 12px;
+    border-radius: 18px;
+    font-size: 14px;
+}
+
+.chatMessages .message .messageContainer {
+    display: flex;
+    flex-direction: column;
+    max-width: 55%;
+}
+
+.chatMessages .message.mine .messageContainer {
+    align-items: flex-end;
+}
+
+.chatMessages .message.theirs .messageContainer {
+    align-items: flex-start;
+}
+
+.chatMessages .message.mine {
+    flex-direction: row-reverse;
+}
+
+.chatMessages .message.mine .messageBody {
+    background-color: var(--blue);
+    color: #fff;
+}
+
+.chatMessages .message.mine.first .messageBody {
+    border-bottom-right-radius: 2px;
+}
+
+.chatMessages .message.mine:not(.first):not(.last) .messageBody {
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+.chatMessages .message.mine.last .messageBody {
+    border-bottom-right-radius: 18px;
+}
+
+.chatMessages .message.mine.last:not(.first) .messageBody {
+    border-top-right-radius: 2px;
+}
+
+.chatMessages .message.theirs.first .messageBody {
+    border-bottom-left-radius: 2px;
+}
+
+.chatMessages .message.theirs:not(.first):not(.last) .messageBody {
+    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
+}
+
+.chatMessages .message.theirs.last .messageBody {
+    border-bottom-left-radius: 18px;
+}
+
+.chatMessages .message.theirs.last:not(.first) .messageBody {
+    border-top-left-radius: 2px;
+}
+
+.senderName {
+    color: rgba(0,0,0,0.4);
+}
+
+.chatMessages .imageContainer {
+    height: 24px;
+    width: 24px;
+    margin-right: 7px;
+}
+
+.chatMessages img {
+    height: 100%;
+    border-radius: 50%;
+    vertical-align: bottom;
+}
+
+.chatMessages .message.last {
+    margin-bottom: 7px;
+}
+
+.loadingSpinnerContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.loadingSpinnerContainer img {
 }

@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Chat = require("../../schemas/Chat");
+const Message = require("../../schemas/Message");
 
 //create group chat
 router.post("/", async (req, res, next) => {
@@ -44,8 +45,12 @@ router.get("/", async (req, res, next) => {
         }
     )
     .populate("users")
+    .populate("latestMessage")
     .sort({updatedAt: -1}) //sort updatedAt descending
-    .then((chatList) => res.status(200).send(chatList))
+    .then(async (chatList) => {
+        chatList = await Chat.populate(chatList, {path: "latestMessage.sender"});
+        return res.status(200).send(chatList);
+    })
     .catch((error) => {
         console.log(error.message);
         return res.sendStatus(400);
@@ -70,6 +75,18 @@ router.get("/:chatId", (req, res, next) => {
     .catch((error) => {
         console.log(error.message);
         return res.sendStatus(204);
+    })
+})
+
+//get message from chat
+router.get("/:chatId/messages", async (req, res, next) => {
+    Message.find({chat: req.params.chatId})
+    .populate("chat")
+    .populate("sender")
+    .then((data) => res.status(200).send(data))
+    .catch((err) => {
+        console.log(err.message);
+        return res.sendStatus(400);
     })
 })
 
