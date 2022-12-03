@@ -20,6 +20,10 @@ html, body {
     font-weight: 300;
 }
 
+ul {
+    margin: 0;
+}
+
 * {
     outline: none !important;
 }
@@ -670,14 +674,24 @@ button span {
     display: flex;
     align-items: flex-end;
     flex-shrink: 0;
-    -webkit-flex: 0;
 }
 
+.typingDots img,
 .chatMessages .message .messageBody {
     background-color: #f1f0f0;
     padding: 6px 12px;
     border-radius: 18px;
     font-size: 14px;
+}
+
+.typingDots img {
+    height: 35px;
+}
+
+.typingDots {
+    padding: 0 var(--spacing);
+    display: none;
+    padding-bottom: 0;
 }
 
 .chatMessages .message .messageContainer {

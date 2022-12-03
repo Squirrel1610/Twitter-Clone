@@ -35,6 +35,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const server = app.listen(port, ()=>{
     console.log(`Server is listening on port ${port}`);
 })
+const io = require("socket.io")(server, { pingTimeout: 60000 });
 
 //routes 
 const loginRoute = require("./routes/loginRoutes");
@@ -66,6 +67,7 @@ app.use("/api/posts", requireLogin, postsApiRoute);
 app.use("/api/chats", requireLogin, chatsApiRoute);
 app.use("/api/messages", requireLogin, messagesApiRoute);
 
+//home page
 app.get("/", requireLogin, (req, res, next) => {
     const payload = {
         pageTitle: "Home",
@@ -76,3 +78,39 @@ app.get("/", requireLogin, (req, res, next) => {
     return res.render("home", payload);
 })
 
+io.on("connection", (socket) =>{
+    console.log("connected to socketio");
+    
+    //setup connect
+    socket.on("setup", (userData) => {
+        socket.join(userData._id);
+        socket.emit("connected");
+    })
+
+    //when client emit event join room
+    socket.on("join room", (chatId) => {
+        socket.join(chatId);
+    })
+
+    //user typing in chatpage
+    socket.on("typing", (chatId) => {
+        socket.in(chatId).emit("typing");
+    })
+
+    //server listen on event stop typing and send the event to the room
+    socket.on("stop typing", (chatId) => {
+        socket.in(chatId).emit("stop typing");
+    })
+
+    //server listen on event new message when user send  message
+    socket.on("new message", (newMessage) => {
+        var chat = newMessage.chat;
+
+        if(!chat.users) return console.log("Chat.users is not defined");
+
+        chat.users.forEach(user => {
+            if(user._id == newMessage.sender._id) return;
+            socket.in(user._id).emit("message received", newMessage);
+        })
+    })
+})

@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Message = require("../../schemas/Message");
 const Chat = require("../../schemas/Chat");
+const User = require("../../schemas/User");
 
 //send message
 router.post("/", async (req, res, next) => {
@@ -21,6 +22,7 @@ router.post("/", async (req, res, next) => {
     .then(async (message) => {
         message = await message.populate("sender");
         message = await message.populate("chat");
+        message = await User.populate(message, { path: "chat.users"});
 
         Chat.findByIdAndUpdate(chatId, {
             latestMessage: message._id
