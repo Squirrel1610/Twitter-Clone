@@ -7,6 +7,7 @@ const path = require("path");
 const fs = require("fs");
 const Post = require("../../schemas/Post");
 const User = require("../../schemas/User");
+const Notification = require("../../schemas/Notification");
 
 //follow and unfollow user
 router.put("/:userId/follow", async (req, res, next) => {
@@ -35,6 +36,11 @@ router.put("/:userId/follow", async (req, res, next) => {
         console.log(err.message);
         return res.sendStatus(400);
     })
+
+    //when follow, notification will be sent
+    if(!isFollowing){
+        await Notification.insertNotification(userId, req.session.user._id, "follow", req.session.user._id);
+    }
 
     return res.status(200).send(req.session.user);
 })

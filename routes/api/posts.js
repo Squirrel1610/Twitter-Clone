@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Post = require("../../schemas/Post");
 const User = require("../../schemas/User");
+const Notification = require("../../schemas/Notification");
 
 //create post
 router.post("/", async (req, res, next) => {
@@ -22,6 +23,12 @@ router.post("/", async (req, res, next) => {
     Post.create(postData)
     .then(async (newPost) => {
         newPost = await User.populate(newPost, {path: "postedBy"});
+        newPost = await User.populate(newPost, {path: "replyTo"});
+
+        if(newPost.replyTo){
+            await Notification.insertNotification(newPost.replyTo.postedBy, newPost.postedBy, "reply", newPost._id);
+        }
+
         return res.status(201).send(newPost);
     })
     .catch((err) =>{
@@ -125,6 +132,10 @@ router.put("/:postId/like", async (req, res, next) => {
         return res.sendStatus(400);
     })
 
+    if(!isLiked){
+        await Notification.insertNotification(post.postedBy, user._id, "postLike", postId);
+    }
+
     return res.status(200).send(post);
 })
 
@@ -185,6 +196,11 @@ router.post("/:postId/retweet", async (req, res, next) => {
         console.log(err.message);
         res.sendStatus(400);
     })
+
+    //when retweet post create, it wil send notification
+    if(!deletedPost){
+        await Notification.insertNotification(post.postedBy, user._id, "retweet", post._id);
+    }
 
     return res.status(200).send(post);
 })
