@@ -5,12 +5,16 @@ const Notification = require("../../schemas/Notification");
 
 //get notification list for notificationPage
 router.get("/", async (req, res, next) => {
-    Notification.find(
-        {
-            userTo: req.session.user._id,
-            notificationType: { $ne: "newMessage" }
-        }
-    )
+    let searchObj = {
+        userTo: req.session.user._id,
+        notificationType: { $ne: "newMessage" }
+    }
+
+    if(req.query.unreadOnly){
+        searchObj.opened = false;
+    }
+
+    Notification.find(searchObj)
     .populate("userTo")
     .populate("userFrom")
     .sort({ createdAt: -1 })

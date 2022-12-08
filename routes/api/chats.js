@@ -48,6 +48,11 @@ router.get("/", async (req, res, next) => {
     .populate("latestMessage")
     .sort({updatedAt: -1}) //sort updatedAt descending
     .then(async (chatList) => {
+        if(req.query.unreadOnly){
+            let result = chatList.filter(chat => !chat.latestMessage.readBy.includes(req.session.user._id));
+            return res.status(200).send(result);
+        }
+
         chatList = await Chat.populate(chatList, {path: "latestMessage.sender"});
         return res.status(200).send(chatList);
     })
