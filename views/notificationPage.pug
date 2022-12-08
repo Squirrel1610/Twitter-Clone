@@ -1,6 +1,10 @@
 extends ./layouts/main_layout.pug
 
 block content
+    .resultsContainer 
 
+block headerButton 
+    button#markNotificationAsRead
+        i.fas.fa-check-double
 block scripts 
     script(src="/js/notificationPage.js") 

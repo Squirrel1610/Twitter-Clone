@@ -780,3 +780,11 @@ button span {
 
 .loadingSpinnerContainer img {
 }
+
+.resultListItem.active {
+    background-color: var(--blueBackground);
+}
+
+.resultListItem.notification * {
+    pointer-events: none;
+}

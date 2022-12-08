@@ -361,6 +361,19 @@ $("#createChatButton").click(() => {
     })
 })
 
+//click on unread notification
+$(document).on("click", ".notification.active", (e) => {
+    var container = $(e.target);
+    var notificationId = container.data().id;
+
+    var href = container.attr("href");
+    //stop the default of anchor tag
+    e.preventDefault();
+
+    var callback = () => window.location = href;
+    markNotificationAsOpened(notificationId, callback);
+})
+
 //search user when create new message
 function searchUser(searchTerm){
     $.get("/api/users", {search: searchTerm}, results => {
@@ -691,4 +704,18 @@ function messageReceived(newMessage){
     }
 }
 
+function markNotificationAsOpened(notificationId = null, callback = null){
+    if(callback == null){
+        callback = () => {
+            location.reload();
+        }
+    }
 
+    var url = notificationId != null ? `/api/notifications/${notificationId}/markAsOpened` : `/api/notifications/markAsOpened`;
+
+    $.ajax({
+        url,
+        type: "PUT",
+        success: () => callback()
+    })
+}
