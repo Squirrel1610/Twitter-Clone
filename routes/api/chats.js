@@ -49,7 +49,7 @@ router.get("/", async (req, res, next) => {
     .sort({updatedAt: -1}) //sort updatedAt descending
     .then(async (chatList) => {
         if(req.query.unreadOnly){
-            let result = chatList.filter(chat => !chat.latestMessage.readBy.includes(req.session.user._id));
+            let result = chatList.filter(chat => chat.latestMessage &&  !chat.latestMessage.readBy.includes(req.session.user._id));
             return res.status(200).send(result);
         }
 
@@ -89,6 +89,18 @@ router.get("/:chatId/messages", async (req, res, next) => {
     .populate("chat")
     .populate("sender")
     .then((data) => res.status(200).send(data))
+    .catch((err) => {
+        console.log(err.message);
+        return res.sendStatus(400);
+    })
+})
+
+//make all messages in the chat are read
+router.put("/:chatId/messages/markAsRead", async (req, res, next) => {
+    Message.updateMany({chat: req.params.chatId}, {
+        $addToSet: {readBy: req.session.user._id}
+    })
+    .then(() => res.sendStatus(204))
     .catch((err) => {
         console.log(err.message);
         return res.sendStatus(400);

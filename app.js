@@ -117,4 +117,9 @@ io.on("connection", (socket) =>{
             socket.in(user._id).emit("message received", newMessage);
         })
     })
+
+    //listen event new notification
+    socket.on("notification received", (userId) => {
+        socket.in(userId).emit("notification received");
+    })
 })

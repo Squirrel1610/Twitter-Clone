@@ -55,6 +55,19 @@ router.put("/markAsOpened", async (req, res, next) =>{
     })
 })
 
+//get latest notification
+router.get("/latest", async (req, res, next) => {
+    Notification.findOne({userTo: req.session.user._id})
+    .populate("userTo")
+    .populate("userFrom")
+    .sort({ createdAt: -1 })
+    .then((result) => res.status(200).send(result))
+    .catch((err) => {
+        console.log(err.message);
+        return res.sendStatus(400);
+    })
+})
+
 
 
 module.exports = router;

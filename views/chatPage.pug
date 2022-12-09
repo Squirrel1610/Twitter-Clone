@@ -14,7 +14,7 @@ block content
             .mainContentContainer 
                 .loadingSpinnerContainer
                     img(src="/images/loading.gif", alt="Loading spinner")
-                .chatContainer(style='visibility: hidden') 
+                .chatContainer(style='visibility: hidden', data-room=chat._id) 
                     ul.chatMessages
 
                     .typingDots 
